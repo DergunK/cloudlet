@@ -10,11 +10,33 @@ extern uint64_t interrupt[];
 struct idt_ptr idt_table[N_in];
 struct desc_table_ptr desc_table;
 
+struct structura 
+{
+  uint64_t r15;
+  uint64_t r14;
+  uint64_t r13;
+  uint64_t r12;
+  uint64_t r11;
+  uint64_t r10;
+  uint64_t r9;
+  uint64_t r8;
+  uint64_t rbp;
+  uint64_t rdi;
+  uint64_t rsi;
+  uint64_t rdx;
+  uint64_t rcx;
+  uint64_t rbx;
+  uint64_t rax;
+  uint64_t int_code;
+  uint64_t error_code;
+}__attribute__((packed));
+
 char *test_error[32] = 
 { 
   " №0: Деление на нуль.\n", 
   " №1: Бесконечность делить на бесконечность.\n", 
   " №2: Просто обычная ошибка. :( \n",
+  " №3: Просто обычная ошибка. :( \n",
   " №4: Ещё одно прерывание.\n",
   " №5: Деление на нуль.\n", 
   " №6: Бесконечность делить на бесконечность.\n", 
@@ -53,45 +75,39 @@ void idt_init()
   write_idtr(&desc_table);
   for (int i = 0; i < N_in; i++)
   {
-    idt_table[i].offset=((uint64_t)interrupt[i]) & 0xFFFF;
+    idt_table[i].offset=(interrupt[i]) & 0xFFFF;
     idt_table[i].segment_sel=KERNEL_CS;
-    idt_table[i].flags=1<<15 | (14 << 8);
-    idt_table[i].offsett=(((uint64_t)interrupt[i]) >>16) & 0xFFFF;
-    idt_table[i].offsettt=(((uint64_t)interrupt[i])>>32);
+    idt_table[i].type=1<<15 | (14 << 8);
+    idt_table[i].offset2=((interrupt[i]) >>16) & 0xFFFF;
+    idt_table[i].offset3=((interrupt[i])>>32);
     idt_table[i].reserved=0;
   }
-
 }
 
 
-void int_handler(uint64_t int_id) 
+void int_handler(struct structura* str) 
 {
-  if (int_id<FMD)
+  if (str->int_code < 32) 
   {
-    print_string("Interrupt ");
-    print_string(test_error[int_id]);
+    print_string("Interrupt: ");
+    print_string(test_error[str->int_code]);
   }
-  else if (FMD <= int_id && int_id <= LMD)
+  else
   {
-    print_string("Interrupt PIT");
-    out8(MCP, 1<<5);
-  }
-  else if(FSD <= int_id && int_id <= LSD)
-  {
+    print_string("Interrupt: PIT\n");
     out8(SCP, 1<<5);
     out8(MCP, 1<<5);
   }
-
 }
 
 void initialize_contr()
 {
-//disable_ints();
-  out8(MCP , 1<<0 | (1 << 4));
+disable_ints();
+  out8(MCP , 1 | (1 << 4));
   out8(MDP,FMD);//начальные условия
   out8(MDP,1<<2);
   out8(MDP,1);
-  out8(SCP, 1<<0 | (1 << 4));
+  out8(SCP, 1 | (1 << 4));
   out8(SDP,FSD);//начальные условия
   out8(SDP,2);
   out8(SDP,1);
@@ -99,7 +115,3 @@ void initialize_contr()
   out8(SDP,0xFF);//маскировка
 enable_ints();
 }
-
-
-
-

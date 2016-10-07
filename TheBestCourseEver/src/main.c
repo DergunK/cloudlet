@@ -18,17 +18,15 @@ void main(void)
 	qemu_gdb_hang();
 	print_string("Hello World!\n");
 
-        disable_ints();
-	idt_init();
-	initialize_contr();
-	__asm__ volatile ("int $0" );
-	__asm__ volatile ("int $1" );
-	
-        idt_init();
-	initialize_contr();
-        enable_ints();
 
-	pit_pit(1);
+	idt_init();
+	__asm__ volatile ("int $0" );
+	__asm__ volatile ("int $31" );
+	initialize_contr();
+
+
+        enable_ints();
+	init_pit(2);
 	
 	while (1);
 }

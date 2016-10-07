@@ -9,23 +9,20 @@
 #define FSD 40
 #define LMD 39
 #define LSD 47
-#define N_in 32
+#define N_in 33
 
 struct idt_ptr
 {
   uint16_t offset;
   uint16_t segment_sel;
-  uint16_t flags;
-  uint16_t offsett;
-  uint32_t offsettt;
+  uint16_t type;
+  uint16_t offset2;
+  uint32_t offset3;
   uint32_t reserved;
 } __attribute__((packed));
 
 void idt_init();
-void int_handler(uint64_t int_id);
 void initialize_contr();
-void unmask_master(uint8_t m);
-void unmask_slave(uint8_t m);
 
 
 #endif

@@ -6,6 +6,6 @@
 #define PCP 0x43
 #define PDP 0x40
 
-void pit_pit(uint16_t freq);
+void init_pit(uint8_t);
 
 #endif 
