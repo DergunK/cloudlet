@@ -33,19 +33,12 @@ void main(void)
         enable_ints();
 	init_pit(2);*/
 
-     get_memory_map();
-     print_memory_map();
-
-	printf("\nBuddy test.\n");
+        get_memory_map();
+        print_memory_map();
 	init_buddy();
 	test_buddy();
-	printf("Finished.\n");
 
-    //init_buddy_allocator();
-  //  init_paging();
 
-//test_buddy_allocator();
-	
 	while (1);
 }
 
