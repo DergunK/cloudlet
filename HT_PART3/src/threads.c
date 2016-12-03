@@ -52,7 +52,7 @@ void unlock1()
 }
 void thread_origin(runnable_t funy, void *a) 
 {
-//  out8(0x20, 1<<5);
+  out8(0x20, 1<<5);
   __asm__ volatile("sti");
   funy(a);
   lock1();
@@ -99,7 +99,6 @@ void thread_join(thread_t *other)
 }
 void thread_schedule() 
 {
-  out8(0x20, 1<<5);
   switch_thread(current_t->next);
 }
 void switch_thread(thread_t *other) 
