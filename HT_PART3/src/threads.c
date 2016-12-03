@@ -39,7 +39,7 @@ void lock1()
   if (current_t->lc==0) 
   {
     __asm__ volatile("cli" : : : "cc");
-  } 
+  }
   current_t->lc++;
 }
 void unlock1() 
@@ -52,8 +52,6 @@ void unlock1()
 }
 void thread_origin(runnable_t funy, void *a) 
 {
-  out8(0x20, 1<<5);
-  __asm__ volatile("sti");
   funy(a);
   lock1();
   current_t->state=TH_join;

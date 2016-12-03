@@ -95,11 +95,10 @@ void int_handler(struct structura* str)
   }
   else
   {
-    
-	thread_schedule();
     //print_string("Interrupt: PIT\n");
     out8(SCP, 1<<5);
     out8(MCP, 1<<5);
+    thread_schedule();
   }
 }
 
