@@ -163,21 +163,21 @@ uintptr_t balloc_alloc(size_t size, uintptr_t from, uintptr_t to)
 	/* The only situation when we would like a larger alignment is
 	 * when we allocate page for a page table, in that case we would
 	 * need PAGE_SIZE alignment, IOW it's quite reasonable default. */
-	lock1();	
+	//lock1();	
 	uintptr_t align = 64;
 
 	if (size <= 32) align = 32;
 	if (size <= 16) align = 16;
 	if (size <= 8)  align = 8;
-	unlock1();
+	//unlock1();
 	return __balloc_alloc(size, align, from, to);
 }
 
 void balloc_free(uintptr_t begin, uintptr_t end)
 {
-	lock1();
+	//lock1();
 	__balloc_add_range(&free_ranges, begin, end);
-	unlock1();
+	//unlock1();
 }
 
 
